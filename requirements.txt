@@ -1,0 +1,10 @@
+uvicorn 
+fastapi
+pandas
+wordcloud
+seaborn
+matplotlib
+langchain
+langchain_google_genai
+selenium
+transformers
