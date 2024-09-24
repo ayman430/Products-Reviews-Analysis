@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # copy app folders and files
-COPY  modules .
+COPY modules .
 COPY main.py .
 COPY reviews.csv .
 

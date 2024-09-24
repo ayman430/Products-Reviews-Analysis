@@ -8,3 +8,6 @@ langchain
 langchain_google_genai
 selenium
 transformers
+faiss
+sentence_transformers
+numpy 

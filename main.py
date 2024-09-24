@@ -5,6 +5,10 @@ from pydantic import BaseModel
 import pandas as pd
 from modules.visualizer import ReviewVisualizer
 from modules.summarizer import ReviewSummarizer, llm, prompt
+from modules.question_answering import QuestionAnswering,  embed_model, prompt as qa_prompt, splitter, q_a_llm
+
+class QuestionResponse(BaseModel):
+    query_text: str
 
 # load data frame
 reviews_df = pd.read_csv('reviews.csv')
@@ -12,6 +16,8 @@ reviews_df = pd.read_csv('reviews.csv')
 # Initialize objects
 visualizer = ReviewVisualizer(reviews_df)
 summarizer = ReviewSummarizer(reviews_df, prompt, llm)
+q_a_model   = QuestionAnswering(q_a_llm, qa_prompt, reviews_df, embed_model, splitter)
+
 # create object from fastapi
 app = FastAPI()
 
@@ -46,6 +52,17 @@ async def summarize_negative():
 async def summarize_positive():
     summary = summarizer.summarization_positive_reviews()
     return {"summary": summary}
+
+@app.post('/QuestionAnswering')
+async def q_a_endpoint(query: QuestionResponse):
+    # Extract the query text from the request body
+    query_text = query.query_text
+
+    # Call the question_answer method of your model
+    answer = q_a_model.question_answer(query_text)
+
+    # Return the answer as a JSON response
+    return {"query": query_text, "answer": answer}
 
 
 
